@@ -14,8 +14,9 @@ export class DatabaseManager {
 
   async load(file: File): Promise<void> {
     const SQL = await initSqlJs({
-      locateFile: () => "/sql-wasm.wasm"
-    });
+    locateFile: file =>
+    `${import.meta.env.BASE_URL}${file}`
+  });
 
     const buffer = await file.arrayBuffer();
 
