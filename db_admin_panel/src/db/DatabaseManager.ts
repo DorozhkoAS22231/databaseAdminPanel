@@ -13,17 +13,24 @@ export class DatabaseManager {
   private db: any = null;
 
   async load(file: File): Promise<void> {
-    const SQL = await initSqlJs({
-    locateFile: file =>
-    `${import.meta.env.BASE_URL}${file}`
+  const SQL = await initSqlJs({
+    locateFile: wasmFile => {
+      console.log(
+        "SQL.JS REQUESTED:",
+        wasmFile
+      );
+
+      return `${import.meta.env.BASE_URL}${wasmFile}`;
+    }
   });
 
-    const buffer = await file.arrayBuffer();
+  const buffer =
+    await file.arrayBuffer();
 
-    this.db = new SQL.Database(
-      new Uint8Array(buffer)
-    );
-  }
+  this.db = new SQL.Database(
+    new Uint8Array(buffer)
+  );
+}
 
   private rowsToObjects(
     result: any
