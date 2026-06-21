@@ -148,7 +148,7 @@ Error generating stack: `+e.message+`
   `,[e])}deleteRecord(e,t){this.db&&this.db.run(`
     DELETE FROM ${e}
     WHERE id=?
-  `,[t])}updateRow(e,t){if(!this.db)return;let n=Number(t.id),r=[`id`,`sport_name`,`teacher_fio`],i=Object.keys(t).filter(e=>!r.includes(e)),a=i.map(e=>`${e}=?`).join(`,`),o=i.map(e=>t[e]);o.push(n),this.db.run(`
+  `,[t])}updateRow(e,t){if(!this.db)return;let n=Number(t.id),r=[`id`,`sport_name`,`teacher_fio`,`group_name`],i=Object.keys(t).filter(e=>!r.includes(e)),a=i.map(e=>`${e}=?`).join(`,`),o=i.map(e=>t[e]);o.push(n),this.db.run(`
     UPDATE ${e}
     SET ${a}
     WHERE id=?
