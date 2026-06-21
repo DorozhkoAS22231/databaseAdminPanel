@@ -544,7 +544,8 @@ updateRow(
   const excludedFields = [
     "id",
     "sport_name",
-    "teacher_fio"
+    "teacher_fio",
+    "group_name"
   ];
 
   const fields =
