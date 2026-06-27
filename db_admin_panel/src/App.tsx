@@ -9,6 +9,7 @@ import EntityTable from "./components/EntityTable";
 
 import { DatabaseManager } from "./db/DatabaseManager";
 import { useColumnVisibility } from "./hooks/useColumnVisibility";
+import { useEffect } from "react";
 
 const dbManager = new DatabaseManager();
 
@@ -30,6 +31,34 @@ export default function App() {
   const [selectedGroup, setSelectedGroup] = useState<any>(null);
 
   const {visibility, setVisibility} = useColumnVisibility();
+
+  const [viewMode,
+  setViewMode] =
+  useState<
+    "tree" |
+    "all"
+  >("tree");
+
+  const [teacherSearch,
+  setTeacherSearch] =
+  useState("");
+
+const [groupSearch,
+  setGroupSearch] =
+  useState("");
+
+const [athleteSearch,
+  setAthleteSearch] =
+  useState("");
+
+
+  useEffect(() => {
+  if (!sports.length) {
+    return;
+  }
+
+  refreshData();
+}, [viewMode]);
 
   const exportDatabase = () => {
   const data =
@@ -57,48 +86,57 @@ export default function App() {
   );
 };
 
-  const refreshData =
-    () => {
-      setSports(
-        dbManager.getSports()
-      );
+  const refreshData = () => {
+  setSports(
+    dbManager.getSports()
+  );
 
-      if (
-        selectedSport
-      ) {
-        setTeachers(
-          dbManager.getTeachersBySport(
-            Number(
-              selectedSport.id
-            )
-          )
-        );
-      }
+  if (viewMode === "all") {
+    setTeachers(
+      dbManager.getAllTeachers()
+    );
 
-      if (
-        selectedTeacher
-      ) {
-        setGroups(
-          dbManager.getGroupsByTeacher(
-            Number(
-              selectedTeacher.id
-            )
-          )
-        );
-      }
+    setGroups(
+      dbManager.getAllGroups()
+    );
 
-      if (
-        selectedGroup
-      ) {
-        setAthletes(
-          dbManager.getAthletesByGroup(
-            Number(
-              selectedGroup.id
-            )
-          )
-        );
-      }
-    };
+    setAthletes(
+      dbManager.getAllAthletes()
+    );
+
+    return;
+  }
+
+  if (selectedSport) {
+    setTeachers(
+      dbManager.getTeachersBySport(
+        Number(selectedSport.id)
+      )
+    );
+  } else {
+    setTeachers([]);
+  }
+
+  if (selectedTeacher) {
+    setGroups(
+      dbManager.getGroupsByTeacher(
+        Number(selectedTeacher.id)
+      )
+    );
+  } else {
+    setGroups([]);
+  }
+
+  if (selectedGroup) {
+    setAthletes(
+      dbManager.getAthletesByGroup(
+        Number(selectedGroup.id)
+      )
+    );
+  } else {
+    setAthletes([]);
+  }
+};
 
   const loadDb =
     async (
@@ -412,170 +450,283 @@ export default function App() {
             }
           />
 
-          {selectedSport && (
-            <>
-              <h2>
-                Тренеры
-              </h2>
+          <div
+  style={{
+    display: "flex",
+    gap: 20,
+    marginBottom: 20,
+    alignItems: "center"
+  }}
+>
+  <b>
+    Режим просмотра:
+  </b>
 
-              <ColumnSelector
-                entity="teachers"
-                visibility={
-                  visibility
-                }
-                setVisibility={
-                  setVisibility
-                }
-              />
+  <label>
+    <input
+      type="radio"
+      checked={
+        viewMode ===
+        "tree"
+      }
+      onChange={() =>
+        setViewMode(
+          "tree"
+        )
+      }
+    />
 
-              <>
-              <EntityTable
-                entity="teachers"
-                data={teachers}
-                visibility={visibility}
-                onRowClick={selectTeacher}
-                onSaveRow={saveRow}
-                onDeleteRow={deleteRow}
-              />
+    Иерархический
+  </label>
 
-              <div
-                style={{
-                  marginTop: 10
-                }}
-              >
-                <button
-                  onClick={() => {
-                    if (
-                      !selectedSport
-                    )
-                      return;
-                  
-                    dbManager.addTeacher(
-                      Number(
-                        selectedSport.id
-                      )
-                    );
-                  
-                    refreshData();
-                  }}
-                >
-                  + Добавить тренера
-                </button>
-              </div>
-            </>
-            </>
-          )}
+  <label>
+    <input
+      type="radio"
+      checked={
+        viewMode ===
+        "all"
+      }
+      onChange={() =>
+        setViewMode(
+          "all"
+        )
+      }
+    />
 
-          {selectedTeacher && (
-            <>
-              <h2>
-                Группы
-              </h2>
+    Общий
+  </label>
+</div>
 
-              <ColumnSelector
-                entity="groups_table"
-                visibility={
-                  visibility
-                }
-                setVisibility={
-                  setVisibility
-                }
-              />
+    {(viewMode === "all" || selectedSport) && (
+  <>
+    <h2>
+      Тренеры
+    </h2>
 
-              <>
-              <EntityTable
-                entity="groups_table"
-                data={groups}
-                visibility={visibility}
-                onRowClick={selectGroup}
-                onSaveRow={saveRow}
-                onDeleteRow={deleteRow}
-              />
+    <ColumnSelector
+      entity="teachers"
+      visibility={visibility}
+      setVisibility={setVisibility}
+    />
 
-              <div
-                style={{
-                  marginTop: 10
-                }}
-              >
-                <button
-                  onClick={() => {
-                    if (
-                      !selectedSport ||
-                      !selectedTeacher
-                    )
-                      return;
-                  
-                    dbManager.addGroup(
-                      Number(
-                        selectedSport.id
-                      ),
-                      Number(
-                        selectedTeacher.id
-                      )
-                    );
-                  
-                    refreshData();
-                  }}
-                >
-                  + Добавить группу
-                </button>
-              </div>
-            </>
-            </>
-          )}
+    <input
+      type="text"
+      placeholder="🔍 Поиск тренеров..."
+      value={teacherSearch}
+      onChange={e =>
+        setTeacherSearch(
+          e.target.value
+        )
+      }
+      style={{
+        width: "100%",
+        padding: 8,
+        marginBottom: 10,
+        boxSizing: "border-box"
+      }}
+    />
 
-          {selectedGroup && (
-            <>
-              <h2>
-                Спортсмены
-              </h2>
+    <EntityTable
+      entity="teachers"
+      data={teachers.filter(row =>
+        Object.values(row)
+          .join(" ")
+          .toLowerCase()
+          .includes(
+            teacherSearch.toLowerCase()
+          )
+      )}
+      visibility={visibility}
+      onRowClick={selectTeacher}
+      onSaveRow={saveRow}
+      onDeleteRow={deleteRow}
+    />
 
-              <ColumnSelector
-                entity="athletes"
-                visibility={
-                  visibility
-                }
-                setVisibility={
-                  setVisibility
-                }
-              />
+    <div
+      style={{
+        marginTop: 10
+      }}
+    >
+      {viewMode === "tree" && (
+  <div
+    style={{
+      marginTop: 10
+    }}
+  >
+    <button
+      onClick={() => {
+        if (!selectedSport)
+          return;
 
-              <>
-              <EntityTable
-                entity="athletes"
-                data={athletes}
-                visibility={visibility}
-                onSaveRow={saveRow}
-                onDeleteRow={deleteRow}
-              />
+        dbManager.addTeacher(
+          Number(selectedSport.id)
+        );
 
-              <div
-                style={{
-                  marginTop: 10
-                }}
-              >
-                <button
-                  onClick={() => {
-                    if (
-                      !selectedGroup
-                    )
-                      return;
-                  
-                    dbManager.addAthlete(
-                      Number(
-                        selectedGroup.id
-                      )
-                    );
-                  
-                    refreshData();
-                  }}
-                >
-                  + Добавить спортсмена
-                </button>
-              </div>
-            </>
-            </>
-          )}
+        refreshData();
+      }}
+    >
+      + Добавить тренера
+    </button>
+  </div>
+)}
+    </div>
+  </>
+)}
+
+{(viewMode === "all" || selectedTeacher) && (
+  <>
+    <h2>
+      Группы
+    </h2>
+
+    <ColumnSelector
+      entity="groups_table"
+      visibility={visibility}
+      setVisibility={setVisibility}
+    />
+
+    <input
+      type="text"
+      placeholder="🔍 Поиск групп..."
+      value={groupSearch}
+      onChange={e =>
+        setGroupSearch(
+          e.target.value
+        )
+      }
+      style={{
+        width: "100%",
+        padding: 8,
+        marginBottom: 10,
+        boxSizing: "border-box"
+      }}
+    />
+
+    <EntityTable
+      entity="groups_table"
+      data={groups.filter(row =>
+        Object.values(row)
+          .join(" ")
+          .toLowerCase()
+          .includes(
+            groupSearch.toLowerCase()
+          )
+      )}
+      visibility={visibility}
+      onRowClick={selectGroup}
+      onSaveRow={saveRow}
+      onDeleteRow={deleteRow}
+    />
+
+    <div
+      style={{
+        marginTop: 10
+      }}
+    >
+      {viewMode === "tree" && (
+  <div
+    style={{
+      marginTop: 10
+    }}
+  >
+    <button
+      onClick={() => {
+        if (
+          !selectedSport ||
+          !selectedTeacher
+        )
+          return;
+
+        dbManager.addGroup(
+          Number(selectedSport.id),
+          Number(selectedTeacher.id)
+        );
+
+        refreshData();
+      }}
+    >
+      + Добавить группу
+    </button>
+  </div>
+)}
+    </div>
+  </>
+)}
+
+{(viewMode === "all" || selectedGroup) && (
+  <>
+    <h2>
+      Спортсмены
+    </h2>
+
+    <ColumnSelector
+      entity="athletes"
+      visibility={visibility}
+      setVisibility={setVisibility}
+    />
+
+    <input
+      type="text"
+      placeholder="🔍 Поиск спортсменов..."
+      value={athleteSearch}
+      onChange={e =>
+        setAthleteSearch(
+          e.target.value
+        )
+      }
+      style={{
+        width: "100%",
+        padding: 8,
+        marginBottom: 10,
+        boxSizing: "border-box"
+      }}
+    />
+
+    <EntityTable
+      entity="athletes"
+      data={athletes.filter(row =>
+        Object.values(row)
+          .join(" ")
+          .toLowerCase()
+          .includes(
+            athleteSearch.toLowerCase()
+          )
+      )}
+      visibility={visibility}
+      onSaveRow={saveRow}
+      onDeleteRow={deleteRow}
+    />
+
+    <div
+      style={{
+        marginTop: 10
+      }}
+    >
+      {viewMode === "tree" && (
+  <div
+    style={{
+      marginTop: 10
+    }}
+  >
+    <button
+      onClick={() => {
+        if (!selectedGroup)
+          return;
+
+        dbManager.addAthlete(
+          Number(selectedGroup.id)
+        );
+
+        refreshData();
+      }}
+    >
+      + Добавить спортсмена
+    </button>
+  </div>
+)}
+    </div>
+  </>
+)}
         </div>
       </div>
     </div>

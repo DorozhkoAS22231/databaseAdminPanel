@@ -544,8 +544,7 @@ updateRow(
   const excludedFields = [
     "id",
     "sport_name",
-    "teacher_fio",
-    "group_name"
+    "teacher_fio"
   ];
 
   const fields =
@@ -612,6 +611,97 @@ deleteSport(
   );
 }
 
+getAllTeachers() {
+  if (!this.db) return [];
 
+  const result = this.db.exec(`
+    SELECT
+      t.*,
+      s.sport_name
+    FROM teachers t
+
+    LEFT JOIN sports s
+      ON s.id=t.sport_id
+
+    ORDER BY
+      s.sport_name,
+      t.last_name
+  `);
+
+  return this.rowsToObjects(result);
+}
+
+getAllGroups() {
+  if (!this.db) return [];
+
+  const result = this.db.exec(`
+    SELECT
+      g.*,
+
+      s.sport_name,
+
+      t.last_name ||
+      ' ' ||
+      t.first_name ||
+      ' ' ||
+      COALESCE(
+        t.middle_name,
+        ''
+      ) AS teacher_fio
+
+    FROM groups_table g
+
+    LEFT JOIN sports s
+      ON s.id=g.sport_id
+
+    LEFT JOIN teachers t
+      ON t.id=g.teacher_id
+
+    ORDER BY
+      s.sport_name,
+      g.group_name
+  `);
+
+  return this.rowsToObjects(result);
+}
+
+getAllAthletes() {
+  if (!this.db) return [];
+
+  const result = this.db.exec(`
+    SELECT
+      a.*,
+
+      g.group_name,
+
+      s.sport_name,
+
+      t.last_name ||
+      ' ' ||
+      t.first_name ||
+      ' ' ||
+      COALESCE(
+        t.middle_name,
+        ''
+      ) AS teacher_fio
+
+    FROM athletes a
+
+    LEFT JOIN groups_table g
+      ON g.id=a.group_id
+
+    LEFT JOIN sports s
+      ON s.id=g.sport_id
+
+    LEFT JOIN teachers t
+      ON t.id=g.teacher_id
+
+    ORDER BY
+      s.sport_name,
+      a.last_name
+  `);
+
+  return this.rowsToObjects(result);
+}
 
 }
