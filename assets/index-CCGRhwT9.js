@@ -148,7 +148,7 @@ Error generating stack: `+e.message+`
   `,[e])}deleteRecord(e,t){this.db&&this.db.run(`
     DELETE FROM ${e}
     WHERE id=?
-  `,[t])}updateRow(e,t){if(!this.db)return;let n=Number(t.id),r=[`id`,`sport_name`,`teacher_fio`,`group_name`],i=Object.keys(t).filter(e=>!r.includes(e)),a=i.map(e=>`${e}=?`).join(`,`),o=i.map(e=>t[e]);o.push(n),this.db.run(`
+  `,[t])}updateRow(e,t){if(!this.db)return;let n=Number(t.id),r=[`id`,`sport_name`,`teacher_fio`],i=Object.keys(t).filter(e=>!r.includes(e)),a=i.map(e=>`${e}=?`).join(`,`),o=i.map(e=>t[e]);o.push(n),this.db.run(`
     UPDATE ${e}
     SET ${a}
     WHERE id=?
@@ -159,4 +159,73 @@ Error generating stack: `+e.message+`
     `,[t,e])}deleteSport(e){this.db&&this.db.run(`
     DELETE FROM sports
     WHERE id=?
-    `,[e])}},se={sports:{id:!1,sport_name:!0},teachers:{id:!1,sport_id:!1,sport_name:!0,last_name:!0,first_name:!0,middle_name:!0,birth_date:!0,phone:!0,email:!0,passport:!1,INN:!1,SNILS:!1,diploma:!0,diploma_number:!0},groups_table:{id:!1,sport_id:!1,teacher_id:!1,sport_name:!0,teacher_fio:!0,group_name:!0},athletes:{id:!1,group_id:!1,sport_name:!0,teacher_fio:!0,group_name:!0,last_name:!0,first_name:!0,middle_name:!0,birth_date:!0,birth_certificate:!1,SNILS:!1,school:!0,home_address:!0,parent:!0,phone:!0,department:!0,category:!0}};function ce(){let[e,t]=(0,_.useState)(()=>{let e=localStorage.getItem(`column-visibility`);return e?JSON.parse(e):se});return(0,_.useEffect)(()=>{localStorage.setItem(`column-visibility`,JSON.stringify(e))},[e]),{visibility:e,setVisibility:t}}var E=new oe;function D(){let[e,t]=(0,_.useState)([]),[n,r]=(0,_.useState)([]),[i,a]=(0,_.useState)([]),[o,s]=(0,_.useState)([]),[c,l]=(0,_.useState)(`database.db`),[u,d]=(0,_.useState)(null),[f,p]=(0,_.useState)(null),[m,h]=(0,_.useState)(null),{visibility:g,setVisibility:v}=ce(),y=()=>{let e=E.saveDatabase(),t=Array.from(e);(0,S.saveAs)(new Blob([new Uint8Array(t)],{type:`application/octet-stream`}),c)},b=()=>{t(E.getSports()),u&&r(E.getTeachersBySport(Number(u.id))),f&&a(E.getGroupsByTeacher(Number(f.id))),m&&s(E.getAthletesByGroup(Number(m.id)))},x=async e=>{await E.load(e),l(e.name),t(E.getSports()),r([]),a([]),s([]),d(null),p(null),h(null)},ne=e=>{if(u?.id===e.id){d(null),p(null),h(null),r([]),a([]),s([]);return}d(e),p(null),h(null),a([]),s([]),r(E.getTeachersBySport(Number(e.id)))},re=e=>{if(f?.id===e.id){p(null),h(null),a([]),s([]);return}p(e),h(null),s([]),a(E.getGroupsByTeacher(Number(e.id)))},ae=e=>{if(m?.id===e.id){h(null),s([]);return}h(e),s(E.getAthletesByGroup(Number(e.id)))},oe=(e,t)=>{E.updateRow(e,t),b()},se=(e,t)=>{E.deleteRecord(e,t),b()};return(0,C.jsxs)(`div`,{children:[(0,C.jsxs)(`div`,{style:{padding:10,borderBottom:`1px solid #ddd`,display:`flex`,gap:10},children:[(0,C.jsx)(w,{onLoad:x}),(0,C.jsx)(`button`,{onClick:y,children:`💾 Скачать БД`})]}),(0,C.jsxs)(`div`,{style:{display:`flex`,minHeight:`90vh`},children:[(0,C.jsx)(ee,{sports:e,selectedSportId:u?.id??null,onSelect:t=>{let n=e.find(e=>e.id===t);n&&ne(n)},onAddSport:()=>{let e=prompt(`Название спорта`);e&&(E.addSport(e),b())},onRenameSport:(e,t)=>{E.updateSport(e,t),b()},onDeleteSport:e=>{E.deleteSport(e),b(),u?.id===e&&(d(null),p(null),h(null),r([]),a([]),s([]))}}),(0,C.jsxs)(`div`,{style:{flex:1,padding:20},children:[(0,C.jsx)(te,{sport:u?.sport_name,teacher:f?`${f.last_name} ${f.first_name}`:void 0,group:m?.group_name}),u&&(0,C.jsxs)(C.Fragment,{children:[(0,C.jsx)(`h2`,{children:`Тренеры`}),(0,C.jsx)(T,{entity:`teachers`,visibility:g,setVisibility:v}),(0,C.jsxs)(C.Fragment,{children:[(0,C.jsx)(ie,{entity:`teachers`,data:n,visibility:g,onRowClick:re,onSaveRow:oe,onDeleteRow:se}),(0,C.jsx)(`div`,{style:{marginTop:10},children:(0,C.jsx)(`button`,{onClick:()=>{u&&(E.addTeacher(Number(u.id)),b())},children:`+ Добавить тренера`})})]})]}),f&&(0,C.jsxs)(C.Fragment,{children:[(0,C.jsx)(`h2`,{children:`Группы`}),(0,C.jsx)(T,{entity:`groups_table`,visibility:g,setVisibility:v}),(0,C.jsxs)(C.Fragment,{children:[(0,C.jsx)(ie,{entity:`groups_table`,data:i,visibility:g,onRowClick:ae,onSaveRow:oe,onDeleteRow:se}),(0,C.jsx)(`div`,{style:{marginTop:10},children:(0,C.jsx)(`button`,{onClick:()=>{!u||!f||(E.addGroup(Number(u.id),Number(f.id)),b())},children:`+ Добавить группу`})})]})]}),m&&(0,C.jsxs)(C.Fragment,{children:[(0,C.jsx)(`h2`,{children:`Спортсмены`}),(0,C.jsx)(T,{entity:`athletes`,visibility:g,setVisibility:v}),(0,C.jsxs)(C.Fragment,{children:[(0,C.jsx)(ie,{entity:`athletes`,data:o,visibility:g,onSaveRow:oe,onDeleteRow:se}),(0,C.jsx)(`div`,{style:{marginTop:10},children:(0,C.jsx)(`button`,{onClick:()=>{m&&(E.addAthlete(Number(m.id)),b())},children:`+ Добавить спортсмена`})})]})]})]})]})]})}(0,v.createRoot)(document.getElementById(`root`)).render((0,C.jsx)(_.StrictMode,{children:(0,C.jsx)(D,{})}));
+    `,[e])}getAllTeachers(){if(!this.db)return[];let e=this.db.exec(`
+    SELECT
+      t.*,
+      s.sport_name
+    FROM teachers t
+
+    LEFT JOIN sports s
+      ON s.id=t.sport_id
+
+    ORDER BY
+      s.sport_name,
+      t.last_name
+  `);return this.rowsToObjects(e)}getAllGroups(){if(!this.db)return[];let e=this.db.exec(`
+    SELECT
+      g.*,
+
+      s.sport_name,
+
+      t.last_name ||
+      ' ' ||
+      t.first_name ||
+      ' ' ||
+      COALESCE(
+        t.middle_name,
+        ''
+      ) AS teacher_fio
+
+    FROM groups_table g
+
+    LEFT JOIN sports s
+      ON s.id=g.sport_id
+
+    LEFT JOIN teachers t
+      ON t.id=g.teacher_id
+
+    ORDER BY
+      s.sport_name,
+      g.group_name
+  `);return this.rowsToObjects(e)}getAllAthletes(){if(!this.db)return[];let e=this.db.exec(`
+    SELECT
+      a.*,
+
+      g.group_name,
+
+      s.sport_name,
+
+      t.last_name ||
+      ' ' ||
+      t.first_name ||
+      ' ' ||
+      COALESCE(
+        t.middle_name,
+        ''
+      ) AS teacher_fio
+
+    FROM athletes a
+
+    LEFT JOIN groups_table g
+      ON g.id=a.group_id
+
+    LEFT JOIN sports s
+      ON s.id=g.sport_id
+
+    LEFT JOIN teachers t
+      ON t.id=g.teacher_id
+
+    ORDER BY
+      s.sport_name,
+      a.last_name
+  `);return this.rowsToObjects(e)}},se={sports:{id:!1,sport_name:!0},teachers:{id:!1,sport_id:!1,sport_name:!0,last_name:!0,first_name:!0,middle_name:!0,birth_date:!0,phone:!0,email:!0,passport:!1,INN:!1,SNILS:!1,diploma:!0,diploma_number:!0},groups_table:{id:!1,sport_id:!1,teacher_id:!1,sport_name:!0,teacher_fio:!0,group_name:!0},athletes:{id:!1,group_id:!1,sport_name:!0,teacher_fio:!0,group_name:!0,last_name:!0,first_name:!0,middle_name:!0,birth_date:!0,birth_certificate:!1,SNILS:!1,school:!0,home_address:!0,parent:!0,phone:!0,department:!0,category:!0}};function ce(){let[e,t]=(0,_.useState)(()=>{let e=localStorage.getItem(`column-visibility`);return e?JSON.parse(e):se});return(0,_.useEffect)(()=>{localStorage.setItem(`column-visibility`,JSON.stringify(e))},[e]),{visibility:e,setVisibility:t}}var E=new oe;function D(){let[e,t]=(0,_.useState)([]),[n,r]=(0,_.useState)([]),[i,a]=(0,_.useState)([]),[o,s]=(0,_.useState)([]),[c,l]=(0,_.useState)(`database.db`),[u,d]=(0,_.useState)(null),[f,p]=(0,_.useState)(null),[m,h]=(0,_.useState)(null),{visibility:g,setVisibility:v}=ce(),[y,b]=(0,_.useState)(`tree`),[x,ne]=(0,_.useState)(``),[re,ae]=(0,_.useState)(``),[oe,se]=(0,_.useState)(``);(0,_.useEffect)(()=>{e.length&&O()},[y]);let D=()=>{let e=E.saveDatabase(),t=Array.from(e);(0,S.saveAs)(new Blob([new Uint8Array(t)],{type:`application/octet-stream`}),c)},O=()=>{if(t(E.getSports()),y===`all`){r(E.getAllTeachers()),a(E.getAllGroups()),s(E.getAllAthletes());return}r(u?E.getTeachersBySport(Number(u.id)):[]),a(f?E.getGroupsByTeacher(Number(f.id)):[]),s(m?E.getAthletesByGroup(Number(m.id)):[])},le=async e=>{await E.load(e),l(e.name),t(E.getSports()),r([]),a([]),s([]),d(null),p(null),h(null)},ue=e=>{if(u?.id===e.id){d(null),p(null),h(null),r([]),a([]),s([]);return}d(e),p(null),h(null),a([]),s([]),r(E.getTeachersBySport(Number(e.id)))},de=e=>{if(f?.id===e.id){p(null),h(null),a([]),s([]);return}p(e),h(null),s([]),a(E.getGroupsByTeacher(Number(e.id)))},fe=e=>{if(m?.id===e.id){h(null),s([]);return}h(e),s(E.getAthletesByGroup(Number(e.id)))},k=(e,t)=>{E.updateRow(e,t),O()},A=(e,t)=>{E.deleteRecord(e,t),O()};return(0,C.jsxs)(`div`,{children:[(0,C.jsxs)(`div`,{style:{padding:10,borderBottom:`1px solid #ddd`,display:`flex`,gap:10},children:[(0,C.jsx)(w,{onLoad:le}),(0,C.jsx)(`button`,{onClick:D,children:`💾 Скачать БД`})]}),(0,C.jsxs)(`div`,{style:{display:`flex`,minHeight:`90vh`},children:[(0,C.jsx)(ee,{sports:e,selectedSportId:u?.id??null,onSelect:t=>{let n=e.find(e=>e.id===t);n&&ue(n)},onAddSport:()=>{let e=prompt(`Название спорта`);e&&(E.addSport(e),O())},onRenameSport:(e,t)=>{E.updateSport(e,t),O()},onDeleteSport:e=>{E.deleteSport(e),O(),u?.id===e&&(d(null),p(null),h(null),r([]),a([]),s([]))}}),(0,C.jsxs)(`div`,{style:{flex:1,padding:20},children:[(0,C.jsx)(te,{sport:u?.sport_name,teacher:f?`${f.last_name} ${f.first_name}`:void 0,group:m?.group_name}),(0,C.jsxs)(`div`,{style:{display:`flex`,gap:20,marginBottom:20,alignItems:`center`},children:[(0,C.jsx)(`b`,{children:`Режим просмотра:`}),(0,C.jsxs)(`label`,{children:[(0,C.jsx)(`input`,{type:`radio`,checked:y===`tree`,onChange:()=>b(`tree`)}),`Иерархический`]}),(0,C.jsxs)(`label`,{children:[(0,C.jsx)(`input`,{type:`radio`,checked:y===`all`,onChange:()=>b(`all`)}),`Общий`]})]}),(y===`all`||u)&&(0,C.jsxs)(C.Fragment,{children:[(0,C.jsx)(`h2`,{children:`Тренеры`}),(0,C.jsx)(T,{entity:`teachers`,visibility:g,setVisibility:v}),(0,C.jsx)(`input`,{type:`text`,placeholder:`🔍 Поиск тренеров...`,value:x,onChange:e=>ne(e.target.value),style:{width:`100%`,padding:8,marginBottom:10,boxSizing:`border-box`}}),(0,C.jsx)(ie,{entity:`teachers`,data:n.filter(e=>Object.values(e).join(` `).toLowerCase().includes(x.toLowerCase())),visibility:g,onRowClick:de,onSaveRow:k,onDeleteRow:A}),(0,C.jsx)(`div`,{style:{marginTop:10},children:y===`tree`&&(0,C.jsx)(`div`,{style:{marginTop:10},children:(0,C.jsx)(`button`,{onClick:()=>{u&&(E.addTeacher(Number(u.id)),O())},children:`+ Добавить тренера`})})})]}),(y===`all`||f)&&(0,C.jsxs)(C.Fragment,{children:[(0,C.jsx)(`h2`,{children:`Группы`}),(0,C.jsx)(T,{entity:`groups_table`,visibility:g,setVisibility:v}),(0,C.jsx)(`input`,{type:`text`,placeholder:`🔍 Поиск групп...`,value:re,onChange:e=>ae(e.target.value),style:{width:`100%`,padding:8,marginBottom:10,boxSizing:`border-box`}}),(0,C.jsx)(ie,{entity:`groups_table`,data:i.filter(e=>Object.values(e).join(` `).toLowerCase().includes(re.toLowerCase())),visibility:g,onRowClick:fe,onSaveRow:k,onDeleteRow:A}),(0,C.jsx)(`div`,{style:{marginTop:10},children:y===`tree`&&(0,C.jsx)(`div`,{style:{marginTop:10},children:(0,C.jsx)(`button`,{onClick:()=>{!u||!f||(E.addGroup(Number(u.id),Number(f.id)),O())},children:`+ Добавить группу`})})})]}),(y===`all`||m)&&(0,C.jsxs)(C.Fragment,{children:[(0,C.jsx)(`h2`,{children:`Спортсмены`}),(0,C.jsx)(T,{entity:`athletes`,visibility:g,setVisibility:v}),(0,C.jsx)(`input`,{type:`text`,placeholder:`🔍 Поиск спортсменов...`,value:oe,onChange:e=>se(e.target.value),style:{width:`100%`,padding:8,marginBottom:10,boxSizing:`border-box`}}),(0,C.jsx)(ie,{entity:`athletes`,data:o.filter(e=>Object.values(e).join(` `).toLowerCase().includes(oe.toLowerCase())),visibility:g,onSaveRow:k,onDeleteRow:A}),(0,C.jsx)(`div`,{style:{marginTop:10},children:y===`tree`&&(0,C.jsx)(`div`,{style:{marginTop:10},children:(0,C.jsx)(`button`,{onClick:()=>{m&&(E.addAthlete(Number(m.id)),O())},children:`+ Добавить спортсмена`})})})]})]})]})]})}(0,v.createRoot)(document.getElementById(`root`)).render((0,C.jsx)(_.StrictMode,{children:(0,C.jsx)(D,{})}));
