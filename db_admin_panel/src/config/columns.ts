@@ -6,102 +6,88 @@ export const COLUMN_LABELS = {
 
   teachers: {
     id: "ID",
-    sport_id: "Спорт",
 
-    sport_name:
-      "Вид спорта",
+    sport_id: "Спорт",
+    sport_name: "Вид спорта",
 
     last_name: "Фамилия",
     first_name: "Имя",
     middle_name: "Отчество",
 
-    birth_date:
-      "Дата рождения",
+    birth_date: "Дата рождения",
 
     phone: "Телефон",
     email: "Email",
 
-    passport:
-      "Паспорт",
+    passport_series: "Серия паспорта",
+    passport_number: "Номер паспорта",
+    passport_date: "Дата выдачи",
+    passport_who: "Кем выдан",
 
     INN: "ИНН",
     SNILS: "СНИЛС",
 
-    diploma:
-      "Диплом",
+    category: "Категория",
+    rank: "Разряд",
 
-    diploma_number:
-      "Номер диплома"
+    addres: "Адрес",
+    courses: "Курсы",
+
+    diploma: "Диплом",
+    diploma_number: "Номер диплома"
   },
 
   groups_table: {
     id: "ID",
 
-    sport_id:
-      "Спорт",
+    sport_id: "Спорт",
+    teacher_id: "Тренер",
 
-    teacher_id:
-      "Тренер",
+    sport_name: "Вид спорта",
+    teacher_fio: "Тренер",
 
-    sport_name:
-      "Вид спорта",
+    group_name: "Название группы",
 
-    teacher_fio:
-      "Тренер",
-
-    group_name:
-      "Название группы"
+    number_of_hours: "Количество часов"
   },
 
   athletes: {
     id: "ID",
 
-    group_id:
-      "Группа",
+    group_id: "Группа",
 
-    sport_name:
-      "Вид спорта",
+    sport_name: "Вид спорта",
+    teacher_fio: "Тренер",
+    group_name: "Группа",
 
-    teacher_fio:
-      "Тренер",
+    last_name: "Фамилия",
+    first_name: "Имя",
+    middle_name: "Отчество",
 
-    group_name:
-      "Группа",
+    birth_date: "Дата рождения",
 
-    last_name:
-      "Фамилия",
+    birth_certificate: "Свидетельство о рождении",
 
-    first_name:
-      "Имя",
+    SNILS: "СНИЛС",
 
-    middle_name:
-      "Отчество",
+    clotch_size: "Размер одежды",
+    shoes_size: "Размер обуви",
 
-    birth_date:
-      "Дата рождения",
+    enrollment_date: "Дата зачисления",
+    enrollment_order: "Приказ о зачислении",
 
-    birth_certificate:
-      "Свидетельство",
+    school: "Школа",
 
-    SNILS:
-      "СНИЛС",
+    home_address: "Домашний адрес",
 
-    school:
-      "Школа",
+    parent: "Родитель",
 
-    home_address:
-      "Адрес",
+    phone: "Телефон",
 
-    parent:
-      "Родитель",
+    department: "Отделение",
 
-    phone:
-      "Телефон",
+    category: "Разряд",
 
-    department:
-      "Отделение",
-
-    category:
-      "Разряд"
+    sport_status: "Спортивный статус"
   }
 };

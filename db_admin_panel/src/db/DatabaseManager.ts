@@ -456,14 +456,33 @@ addTeacher(
     INSERT INTO teachers (
       sport_id,
       last_name,
-      first_name
+      first_name,
+      middle_name,
+      birth_date,
+      phone,
+      email,
+      passport_series,
+      passport_number,
+      passport_date,
+      passport_who,
+      INN,
+      SNILS,
+      category,
+      rank,
+      addres,
+      courses,
+      diploma,
+      diploma_number
     )
     VALUES (
-      ?,
-      'Новый',
-      'Тренер'
+      ?, '', '', '', '', '', '',
+      '', '', '', '',
+      '', '',
+      '', '',
+      '', '',
+      '', ''
     )
-  `,
+    `,
     [sportId]
   );
 }
@@ -479,14 +498,16 @@ addGroup(
     INSERT INTO groups_table (
       sport_id,
       teacher_id,
-      group_name
+      group_name,
+      number_of_hours
     )
     VALUES (
       ?,
       ?,
-      'Новая группа'
+      '',
+      ''
     )
-  `,
+    `,
     [
       sportId,
       teacherId
@@ -504,14 +525,38 @@ addAthlete(
     INSERT INTO athletes (
       group_id,
       last_name,
-      first_name
+      first_name,
+      middle_name,
+      birth_date,
+      birth_certificate,
+      SNILS,
+      clotch_size,
+      shoes_size,
+      enrollment_date,
+      enrollment_order,
+      school,
+      home_address,
+      parent,
+      phone,
+      department,
+      category,
+      sport_status
     )
     VALUES (
       ?,
-      'Новый',
-      'Спортсмен'
+      '', '', '', '', '',
+      '',
+      '', '',
+      '', '',
+      '',
+      '',
+      '',
+      '',
+      '',
+      '',
+      ''
     )
-  `,
+    `,
     [groupId]
   );
 }
@@ -531,15 +576,11 @@ deleteRecord(
 }
 updateRow(
   table: string,
-  data: Record<
-    string,
-    unknown
-  >
+  data: Record<string, unknown>
 ) {
   if (!this.db) return;
 
-  const id =
-    Number(data.id);
+  const id = Number(data.id);
 
   const excludedFields = [
     "id",
@@ -547,28 +588,27 @@ updateRow(
     "teacher_fio"
   ];
 
-  const fields =
-    Object.keys(data)
-      .filter(
-        key =>
-          !excludedFields.includes(
-            key
-          )
-      );
-
-  const setClause =
-    fields
-      .map(
-        field =>
-          `${field}=?`
-      )
-      .join(",");
-
-  const values =
-    fields.map(
-      field =>
-        data[field]
+  if (table === "athletes") {
+    excludedFields.push(
+      "group_name"
     );
+  }
+
+  const fields =
+    Object.keys(data).filter(
+      key =>
+        !excludedFields.includes(
+          key
+        )
+    );
+
+  const setClause = fields
+    .map(field => `${field}=?`)
+    .join(",");
+
+  const values = fields.map(
+    field => data[field]
+  );
 
   values.push(id);
 

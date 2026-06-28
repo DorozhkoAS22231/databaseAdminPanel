@@ -144,6 +144,18 @@ if (
                 </div>
 
                 <input
+                  type={
+                    field.includes("date")
+                      ? "date"
+                      : field === "email"
+                      ? "email"
+                      : field === "phone"
+                      ? "tel"
+                      : field ===
+                        "diploma_number"
+                      ? "number"
+                      : "text"
+                  }
                   value={String(
                     value ?? ""
                   )}
@@ -152,14 +164,12 @@ if (
                       prev => ({
                         ...prev,
                         [field]:
-                          e.target
-                            .value
+                          e.target.value
                       })
                     )
                   }
                   style={{
-                    width:
-                      "100%",
+                    width: "100%",
                     padding: 8,
                     boxSizing:
                       "border-box"

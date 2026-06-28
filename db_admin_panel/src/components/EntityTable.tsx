@@ -112,23 +112,35 @@ export default function EntityTable({
         }}
       />
 
-      <table
-        border={1}
-        cellPadding={6}
+      <div
         style={{
-          width: "100%",
-          borderCollapse:
-            "collapse"
+          width: "1600px",
+          overflowX: "scroll",
+          overflowY: "hidden",
+          marginBottom: 10
         }}
       >
+        <table
+          border={1}
+          cellPadding={6}
+          style={{
+          borderCollapse: "collapse",
+          width: "max-content",
+          minWidth: "100%"
+        }}
+        >
         <thead>
           <tr>
             {visibleColumns.map(
               column => (
                 <th
-                  key={
-                    column
-                  }
+                  key={column}
+                  style={{
+                    minWidth: 70,
+                    padding: "12px 16px",
+                    whiteSpace: "nowrap",
+                    fontSize: 20
+                  }}
                 >
                   {labels?.[
                     column
@@ -138,7 +150,13 @@ export default function EntityTable({
               )
             )}
 
-            <th>
+            <th style={{
+                    minWidth: 110,
+                    padding: "12px 16px",
+                    whiteSpace: "nowrap",
+                    fontSize: 20
+                  }}
+            >
               Действия
             </th>
           </tr>
@@ -179,7 +197,12 @@ export default function EntityTable({
                       key={
                         column
                       }
-                    >
+                      style={{
+                        minWidth: 70,
+                        padding: "12px 16px",
+                        fontSize: 20
+                      }}
+                       >
                       {String(
                         row[
                           column
@@ -235,6 +258,7 @@ export default function EntityTable({
           )}
         </tbody>
       </table>
+      </div>
     </>
   );
 }

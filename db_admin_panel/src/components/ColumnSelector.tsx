@@ -26,6 +26,7 @@ export default function ColumnSelector({
   const columns =
     visibility[entity];
 
+
   if (!columns) {
     return null;
   }

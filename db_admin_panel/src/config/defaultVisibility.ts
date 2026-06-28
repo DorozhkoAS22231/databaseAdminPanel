@@ -1,11 +1,13 @@
 export const DEFAULT_VISIBILITY = {
   sports: {
     id: false,
+
     sport_name: true
   },
 
   teachers: {
     id: false,
+
     sport_id: false,
 
     sport_name: true,
@@ -19,9 +21,20 @@ export const DEFAULT_VISIBILITY = {
     phone: true,
     email: true,
 
-    passport: false,
-    INN: false,
-    SNILS: false,
+    passport_series: true,
+    passport_number: true,
+    passport_date: true,
+    passport_who: true,
+
+    INN: true,
+    SNILS: true,
+
+    category: true,
+    rank: true,
+
+    addres: true,
+
+    courses: true,
 
     diploma: true,
     diploma_number: true
@@ -36,7 +49,9 @@ export const DEFAULT_VISIBILITY = {
     sport_name: true,
     teacher_fio: true,
 
-    group_name: true
+    group_name: true,
+
+    number_of_hours: true
   },
 
   athletes: {
@@ -54,9 +69,15 @@ export const DEFAULT_VISIBILITY = {
 
     birth_date: true,
 
-    birth_certificate: false,
+    birth_certificate: true,
 
-    SNILS: false,
+    SNILS: true,
+
+    clotch_size: true,
+    shoes_size: true,
+
+    enrollment_date: true,
+    enrollment_order: true,
 
     school: true,
 
@@ -68,6 +89,8 @@ export const DEFAULT_VISIBILITY = {
 
     department: true,
 
-    category: true
+    category: true,
+
+    sport_status: true
   }
 };
